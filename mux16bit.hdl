@@ -1,0 +1,8 @@
+CHIP mux16bit{                         //16-bit 2 to 1 multiplexer
+    IN x[16],y[16],c;
+    OUT out[16];
+
+    PARTS:
+    mux8bit(x=x[0..7],y=y[0..7],c=c,z=out[0..7]);
+    mux8bit(x=x[8..15],y=y[8..15],c=c,z=out[8..15]);
+}

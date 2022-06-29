@@ -1,0 +1,54 @@
+/*
+ * The Hack CPU (Central Processing unit), consists of an ALU,
+ * two registers A, D, and a program counter named PC.
+ * The D and A in the language specification
+ * refer to CPU-resident registers, while M refers to the external
+ * memory location addressed by A, i.e. to Memory[A]. 
+ * If reset==1 then the 
+ * pc is set to 0 in next time step rather 
+ * than to the address resulting from executing the current instruction. 
+ */
+
+ CHIP hackCPU {
+    IN  inM[16],         //(inM = contents of RAM64[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset==1) or continue executing
+                         // the current program (reset==0).
+
+    OUT outM[16],        // M value output
+        writeM,          // 1 if we need to Write to M 
+        addressM[15],    // Address of data memory (of M)
+        pc[15];          // address of next instruction
+
+    PARTS:
+    //instruction[15]=1 denotes C-Instruction, else it is an A-Instruction
+    mux16bit(x=instruction, y=outALU, c=instruction[15], out=outMux1);
+    //load the 15 bit address from instruction in A if it is an A-Instruction 
+    //else store the ALU output in A if it is a C-Instruction
+    And(a=instruction[3], b=instruction[15], out=writeM);
+    And(a=instruction[4], b=instruction[15], out=writeD);
+    And(a=instruction[5], b=instruction[15], out=insWriteA);
+    Not(in=instruction[15], out=addWriteA); //if it is an A-Instruction
+    Or(a=insWriteA, b=addWriteA, out=writeA);
+    ARegister(in=outMux1, load=writeA, out[0..14]=addressM, out=outRegA);
+    mux16bit(x=outRegA, y=inM, c=instruction[12], out=outMux2);//outMux2 =A/M according to instruction[12]
+    DRegister(in=outALU, load=writeD, out=outRegD);
+    hack(x=outRegD, y=outMux2, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=outALU, out=outM, zr=zero, ng=negative);
+    //In ALU, x=D, y= A/M according to instruction[12]
+    Not(in=zero, out=notZero);
+    Not(in=negative, out=notNegative);
+    And(a=notZero, b=notNegative, out=positive);
+    //Following are instructions where conditional jump takes place
+    And(a=instruction[0], b=instruction[15], out=insJumpPos);
+    And(a=instruction[1], b=instruction[15], out=insJumpZero);
+    And(a=instruction[2], b=instruction[15], out=insJumpNeg);
+    And(a=insJumpPos, b=positive, out=jumpPos); //JGT
+    And(a=insJumpZero, b=zero, out=jumpZero);   //JEQ
+    And(a=insJumpNeg, b=negative, out=jumpNeg); //JLT
+    //JLE, JGE, JNE, JMP are alrady taken care of as one of the above becomes true
+    Or(a=jumpPos, b=jumpZero, out=jump1);
+    Or(a=jump1, b=jumpNeg, out=jump2);
+    Not(in=jump2, out=notJump2);//if no jump then pc=pc+1
+    PC(in=outRegA, load=jump2, inc=notJump2, reset=reset, out[0..14]=pc);
+}

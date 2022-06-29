@@ -1,0 +1,15 @@
+CHIP Computer {
+
+    IN reset;
+
+    PARTS:
+    hackCPU(instruction=instruction,reset=reset,inM=outMemo,outM=CPUoutM,writeM=wM,addressM[0..5]=adM,pc=PC);
+    //When reset is 0, the program stored in the ROM32K executes.
+    //When reset is 1, the execution of the program restarts. 
+
+    RAM64(in=CPUoutM,load=wM,address=adM,out=outMemo);
+    //RAM64 has the memory of the computer which stores data
+
+    ROM32K(address=PC,out=instruction);
+    //ROM32K stores the instructions
+}

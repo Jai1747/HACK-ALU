@@ -1,0 +1,17 @@
+CHIP hack{
+    IN x[16],y[16],zx,nx,zy,ny,f,no;
+    OUT out[16],zr,ng;
+
+    PARTS:
+    zero16bit(x=nx,out=zero);               //zero - 16-bit zero value
+    mux16bit(x=x,y=zero,c=zx,out=p1);       //p1=x if zx=0 else p1=0 if zx=1
+    mux16bit(x=y,y=zero,c=zy,out=q1);       //q1=y if zy=0 else q1=0 if zy=1
+    xor16bit(x=p1,y=nx,out=p);              //p=!p1
+    xor16bit(x=q1,y=ny,out=q);              //q=!q1
+    adder16bit(x=p,y=q,ans=sum);            //sum=p+q
+    and16bit(a=p,b=q,out=andd);             //andd=p&q
+    mux16bit(x=andd,y=sum,c=f,out=r);       //r=andd if f=0 else r=sum
+    xor16bit(x=r,y=no,out=out1);            //out1=r if no=0 else out1=!r
+    zrnggenerate(x=out1,zr=zr,ng=ng);       //zr=1 if out1=0 else zr=0. ng=out1[15]
+    xor16bit(x=out1,y=false,out=out);       //out=out1
+}

@@ -1,0 +1,10 @@
+CHIP CLA16{
+    IN x[16],y[16],c0;
+    OUT s[16],c16,c15;                                                   //c15,c16 are outputs to check for overflow
+
+    PARTS:
+    CLA(x=x[0..3],y=y[0..3],c0=c0,s=s[0..3],c4=c4,c3=c3);                //CLA chip for i=0..3
+    CLA(x=x[4..7],y=y[4..7],c0=c4,s=s[4..7],c4=c8,c3=c7);                //CLA chip for i=4..7
+    CLA(x=x[8..11],y=y[8..11],c0=c8,s=s[8..11],c4=c12,c3=c11);           //CLA chip for i=8..11
+    CLA(x=x[12..15],y=y[12..15],c0=c12,s=s[12..15],c4=c16,c3=c15);       //CLA chip for i=12..15
+}

@@ -1,0 +1,10 @@
+CHIP mux1bit{            //1-bit 2 to 1 multiplexer
+    IN x,y,c;
+    OUT z;
+
+    PARTS:
+    Not(in=c,out=nc);
+    And(a=nc,b=x,out=o1);
+    And(a=c,b=y,out=o2);
+    Or(a=o1,b=o2,out=z); //z=xc'+yc
+}

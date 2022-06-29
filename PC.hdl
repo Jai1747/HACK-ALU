@@ -1,0 +1,12 @@
+//This is the program counter
+CHIP PC {
+    IN in[16],load,inc,reset;
+    OUT out[16];
+
+    PARTS:
+    CLA16(x=out5,y=false,c0=true,s=out1); //adder with carry=1
+    mux16bit(x=out5,y=out1,c=inc,out=out2);
+    mux16bit(x=out2,y=in,c=load,out=out3);
+    mux16bit(x=out3,y=false,c=reset,out=out4);
+    Register(in=out4,load=true,out=out5,out=out);
+}

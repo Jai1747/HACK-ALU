@@ -1,0 +1,23 @@
+CHIP zrnggenerate{                 //generate zr,ng from out
+    IN x[16];
+    OUT zr,ng;
+
+    PARTS:
+    And(a=true,b=x[15],out=ng);    //ng=x[15]
+    Or(a=x[0],b=x[1],out=o1);
+    Or(a=x[2],b=o1,out=o2);
+    Or(a=x[3],b=o2,out=o3);
+    Or(a=x[4],b=o3,out=o4);
+    Or(a=x[5],b=o4,out=o5);
+    Or(a=x[6],b=o5,out=o6);
+    Or(a=x[7],b=o6,out=o7);
+    Or(a=x[8],b=o7,out=o8);
+    Or(a=x[9],b=o8,out=o9);
+    Or(a=x[10],b=o9,out=o10);
+    Or(a=x[11],b=o10,out=o11);
+    Or(a=x[12],b=o11,out=o12);
+    Or(a=x[13],b=o12,out=o13);  
+    Or(a=x[14],b=o13,out=o14);     //nzr=x[0]+x[1]+ ... x[14] + x[15]
+    Or(a=x[15],b=o14,out=nzr);     //nzr=0 if x=0 else nzr=1 
+    Not(in=nzr,out=zr);            //zr=nzr'
+}

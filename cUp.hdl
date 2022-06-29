@@ -1,0 +1,8 @@
+CHIP cUp{                       //used to get c(i+1) from ci
+    IN p,c,g;                   //p->pi,g->gi,c->ci
+    OUT cout;                   //cout->c(i+1)
+
+    PARTS:
+    And(a=p,b=c,out=x);
+    Or(a=x,b=g,out=cout);      //cout->c(i+1)=pc+g
+} 

@@ -1,0 +1,22 @@
+CHIP c2{
+    IN y[16],s;          //if(y==1)-> w is 1's complement of y
+    OUT w[16];           //else-> w=y
+
+    PARTS:
+    Xor(a=y[0],b=s,out=w[0]);
+    Xor(a=y[1],b=s,out=w[1]);
+    Xor(a=y[2],b=s,out=w[2]);
+    Xor(a=y[3],b=s,out=w[3]);
+    Xor(a=y[4],b=s,out=w[4]);
+    Xor(a=y[5],b=s,out=w[5]);
+    Xor(a=y[6],b=s,out=w[6]);
+    Xor(a=y[7],b=s,out=w[7]);
+    Xor(a=y[8],b=s,out=w[8]);
+    Xor(a=y[9],b=s,out=w[9]);
+    Xor(a=y[10],b=s,out=w[10]);
+    Xor(a=y[11],b=s,out=w[11]);
+    Xor(a=y[12],b=s,out=w[12]);
+    Xor(a=y[13],b=s,out=w[13]);
+    Xor(a=y[14],b=s,out=w[14]);
+    Xor(a=y[15],b=s,out=w[15]);
+}
